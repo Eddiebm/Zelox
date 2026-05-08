@@ -1,1 +1,1553 @@
-hello
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZELOX — The New Standard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><rect fill='%23be0000' width='10' height='10'/></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --charcoal: #1a1a1a;
+            --gray: #666666;
+            --light-gray: #cccccc;
+            --red: #be0000;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: var(--white);
+            color: var(--black);
+            font-size: 16px;
+            line-height: 1.5;
+            letter-spacing: -0.01em;
+            overflow-x: hidden;
+        }
+        
+        /* === NAV === */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            z-index: 1000;
+            background: transparent;
+            transition: background 0.3s, border 0.3s;
+        }
+        
+        .nav.scrolled {
+            background: rgba(0,0,0,0.95);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .nav.light.scrolled {
+            background: rgba(255,255,255,0.95);
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .nav .logo {
+            font-family: 'Instrument Serif', serif;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav.scrolled .logo { color: var(--white); }
+        .nav.light.scrolled .logo { color: var(--black); }
+        
+        .nav nav { display: flex; gap: 40px; }
+        
+        .nav nav a {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav.scrolled nav a { color: rgba(255,255,255,0.7); }
+        .nav.light.scrolled nav a { color: var(--gray); }
+        
+        .nav nav a:hover { color: var(--white); }
+        .nav.light.scrolled nav a:hover { color: var(--black); }
+        
+        /* === COVER === */
+        .cover {
+            min-height: 100vh;
+            position: relative;
+            background: var(--black);
+            overflow: hidden;
+        }
+        
+        .cover::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .cover-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(120%) brightness(90%);
+            opacity: 0.85;
+        }
+        
+        .cover-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.6) 100%);
+            z-index: 1;
+        }
+        
+        .cover-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 40px 40px;
+            z-index: 5;
+        }
+        
+        .cover-title {
+            font-family: 'Bodoni Moda', 'Didot', serif;
+            font-size: clamp(5rem, 18vw, 16rem);
+            font-weight: 400;
+            color: var(--white);
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+        }
+        
+        .cover-title .amp {
+            font-family: 'Bodoni Moda', serif;
+            font-style: italic;
+            font-weight: 400;
+        }
+        
+        .cover-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-weight: 300;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 0.1em;
+            margin-top: 30px;
+            max-width: 500px;
+            text-transform: uppercase;
+        }
+        
+        .cover-footer {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            right: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 20;
+        }
+        
+        .cover-footer .tagline {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--white);
+        }
+        
+        .cover-footer .meta {
+            display: flex;
+            gap: 40px;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .issue-badge {
+            position: absolute;
+            top: 150px;
+            right: 40px;
+            z-index: 20;
+        }
+        
+        .issue-badge .number {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 12rem;
+            font-weight: 400;
+            color: var(--red);
+            opacity: 0.2;
+            line-height: 1;
+        }
+        
+        .issue-badge .label {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            text-align: right;
+        }
+        
+        /* === INTRO === */
+        .intro {
+            background: var(--white);
+            padding: 150px 40px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .intro-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 100px;
+            align-items: center;
+        }
+        
+        .intro-lead {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(2.5rem, 4vw, 4rem);
+            font-weight: 400;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+        }
+        
+        .intro-lead .highlight {
+            font-style: italic;
+            color: var(--charcoal);
+        }
+        
+        .intro-details { display: grid; gap: 40px; }
+        
+        .intro-p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--gray);
+        }
+        
+        .intro-p strong { color: var(--black); font-weight: 500; }
+        .intro-p strong.accent { color: var(--red); }
+        
+        .credentials {
+            display: flex;
+            gap: 60px;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .credential {
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
+        
+        .credential strong {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            color: var(--black);
+            margin-bottom: 5px;
+        }
+        
+        /* === SERVICES === */
+        .services {
+            background: var(--black);
+            padding: 150px 40px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 80px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+        
+        .section-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 400;
+            color: var(--white);
+            letter-spacing: -0.02em;
+        }
+        
+        .section-count {
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .service-item {
+            background: var(--black);
+            padding: 60px 40px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+        
+        .service-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--red);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 0;
+        }
+        
+        .service-item:hover::before { transform: translateY(0); }
+        .service-item > * { position: relative; z-index: 1; }
+        
+        .service-number {
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 20px;
+        }
+        
+        .service-item:hover .service-number { color: var(--white); }
+        
+        .service-name {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--white);
+            transition: color 0.3s;
+        }
+        
+        .service-item:hover .service-name { color: var(--black); }
+        
+        .service-desc {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.6;
+            margin-top: 15px;
+        }
+        
+        .service-item:hover .service-desc { color: var(--charcoal); }
+        
+        .service-arrow {
+            font-size: 2rem;
+            color: var(--white);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+        }
+        
+        .service-item:hover .service-arrow {
+            opacity: 1;
+            transform: translateY(0);
+            color: var(--black);
+        }
+        
+        .service-price {
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-top: 30px;
+        }
+        
+        .service-item:hover .service-price { color: var(--white); }
+        
+        /* === WORK === */
+        .work {
+            background: var(--white);
+            padding: 150px 40px;
+        }
+        
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .work-item {
+            position: relative;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            background: var(--charcoal);
+        }
+        
+        .work-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: all 0.5s;
+        }
+        
+        .work-item:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+        
+        .work-item-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px;
+        }
+        
+        .work-item-label {
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 10px;
+        }
+        
+        .work-item-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.8rem;
+            color: var(--white);
+            font-weight: 400;
+        }
+        
+        .work-cta {
+            text-align: center;
+            margin-top: 80px;
+        }
+        
+        .work-cta a {
+            display: inline-block;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--black);
+            text-decoration: none;
+            padding: 20px 40px;
+            border: 1px solid var(--black);
+            transition: all 0.3s;
+        }
+        
+        .work-cta a:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+        
+        /* === QUOTE === */
+        .quote-section {
+            background: var(--white);
+            padding: 200px 40px;
+            text-align: center;
+        }
+        
+        .quote-text {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            font-weight: 400;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .quote-text em { font-style: italic; }
+        
+        .quote-author {
+            margin-top: 60px;
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
+        
+        /* === STATS === */
+        .stats {
+            background: var(--black);
+            padding: 120px 40px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .stat-item {
+            background: var(--black);
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 300;
+            color: var(--white);
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-top: 15px;
+        }
+        
+        /* === CONTACT === */
+        .contact {
+            background: var(--black);
+            padding: 150px 40px;
+            text-align: center;
+        }
+        
+        .contact-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 400;
+            color: var(--white);
+            letter-spacing: -0.02em;
+        }
+        
+        .contact-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 30px;
+        }
+        
+        /* Contact Form */
+        .contact-form {
+            max-width: 900px;
+            margin: 60px auto 0;
+            text-align: left;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .form-row.three-col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        
+        .form-group.full { grid-column: 1 / -1; }
+        
+        .form-group label {
+            display: block;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .form-group textarea,
+        .form-group input[type="email"] {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: var(--white);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-group textarea:focus,
+        .form-group input:focus {
+            border-color: var(--red);
+        }
+        
+        .form-group textarea::placeholder,
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+        
+        /* Voice Input */
+        .voice-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .voice-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid var(--red);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .voice-btn:hover {
+            background: var(--red);
+        }
+        
+        .voice-btn.recording {
+            background: var(--red);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .voice-icon {
+            font-size: 1.5rem;
+        }
+        
+        .voice-status {
+            display: block;
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 10px;
+        }
+        
+        .voice-input audio {
+            width: 100%;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .voice-input.recording audio {
+            display: block;
+        }
+        
+        /* File Drop */
+        .file-drop {
+            background: rgba(255,255,255,0.05);
+            border: 1px dashed rgba(255,255,255,0.2);
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-drop:hover {
+            border-color: var(--red);
+            background: rgba(255,255,255,0.08);
+        }
+        
+        .file-drop-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .file-icon {
+            font-size: 1.5rem;
+        }
+        
+        .file-drop span {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .file-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .file-preview {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        /* URL Input */
+        .url-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .url-input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 15px 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: var(--white);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .url-input:focus {
+            border-color: var(--red);
+        }
+        
+        .url-input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+        
+        /* Form Submit */
+        .form-submit {
+            width: 100%;
+            background: var(--red);
+            border: none;
+            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 30px;
+        }
+        
+        .form-submit:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+        
+        .contact-email {
+            margin-top: 80px;
+        }
+        
+        .contact-email a {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .contact-email a:hover {
+            color: var(--red);
+        }
+        
+        .or-divider {
+            text-align: center;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .or-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 1px;
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .or-divider span {
+            background: var(--black);
+            padding: 0 20px;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            position: relative;
+        }
+        
+        .contact-locations {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 80px;
+            padding-top: 80px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .contact-location {
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+        }
+        
+        /* === FOOTER === */
+        .footer {
+            background: var(--white);
+            padding: 80px 40px 40px;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 80px;
+        }
+        
+        .footer-brand { font-family: 'Bodoni Moda', serif; }
+        
+        .footer-brand .logo {
+            font-size: 2.5rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            color: var(--red);
+            text-decoration: none;
+        }
+        
+        .footer-brand p {
+            margin-top: 30px;
+            font-size: 0.95rem;
+            color: var(--gray);
+            max-width: 280px;
+            line-height: 1.7;
+        }
+        
+        .footer-col h4 {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+        
+        .footer-col a {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--gray);
+            padding: 8px 0;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+        
+        .footer-col a:hover { color: var(--black); }
+        
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 80px auto 0;
+            padding-top: 30px;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--gray);
+            letter-spacing: 0.05em;
+        }
+        
+        /* === RESPONSIVE === */
+        @media (max-width: 1024px) {
+            .intro-content { grid-template-columns: 1fr; gap: 60px; }
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .footer-content { grid-template-columns: 1fr 1fr; gap: 60px; }
+            .work-grid { grid-template-columns: 1fr; }
+            .contact-locations { flex-wrap: wrap; gap: 30px; }
+            
+            .form-row { grid-template-columns: 1fr; }
+            .form-row.three-col { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .nav { padding: 0 20px; }
+            .nav nav { display: none; }
+            .cover-content, .cover-footer { padding: 0 20px; left: 20px; right: 20px; }
+            .issue-badge { right: 20px; }
+            .issue-badge .number { font-size: 8rem; }
+            .intro, .services, .quote-section, .stats, .footer, .work, .contact { padding: 100px 20px; }
+            .services-grid, .stats { grid-template-columns: 1fr; }
+            .credentials { flex-direction: column; gap: 30px; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .footer-content { grid-template-columns: 1fr; gap: 40px; }
+            .footer-bottom { flex-direction: column; gap: 15px; }
+            .cover-title { font-size: clamp(3rem, 15vw, 8rem); }
+        }
+    </style>
+</head>
+<body>
+    <!-- === NAV === -->
+    <nav class="nav" id="nav">
+        <a href="#" class="logo">ZELOX</a>
+        <nav>
+            <a href="#services">Services</a>
+            <a href="#work">Work</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </nav>
+    
+    <!-- === COVER === -->
+    <section class="cover">
+        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1920&q=80" alt="Editorial" class="cover-image">
+        <div class="cover-gradient"></div>
+        
+        <div class="cover-content">
+            <h1 class="cover-title">
+                Zelox<span class="amp">&amp;</span><br>Group
+            </h1>
+            <p class="cover-subtitle">
+                Strategic creative studio • New York • London • Tokyo • Dubai
+            </p>
+        </div>
+        
+        <div class="issue-badge">
+            <div class="number">01</div>
+            <div class="label">Premier Edition</div>
+        </div>
+        
+        <div class="cover-footer">
+            <p class="tagline">Not AI. Artistry.</p>
+            <div class="meta">
+                <span>Spring/Summer 2026</span>
+                <span>$25.00</span>
+                <span>ISSN 0001-0001</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- === INTRO === -->
+    <section class="intro" id="about">
+        <div class="intro-content">
+            <h2 class="intro-lead">
+                We don't build "<em class="highlight">AI solutions</em>." We craft <em class="highlight">experiences</em> that define the future.
+            </h2>
+            
+            <div class="intro-details">
+                <p class="intro-p">
+                    <strong>Zelox Group</strong> is not another tech company. We are architects of the new aesthetic— 
+                    a strategic creative studio where computational intelligence meets editorial precision. 
+                    Every asset we create carries the weight of intention.
+                </p>
+                <p class="intro-p">
+                    We don't do "AI slop." We don't ship templates. Each project is curated, crafted, 
+                    and refined to meet the exacting standards of brands that demand excellence.
+                </p>
+                <p class="intro-p">
+                    <strong class="accent">The result:</strong> Not generated content— curated experiences. Not algorithmic output— artistic execution.
+                </p>
+                
+                <div class="credentials">
+                    <div class="credential">
+                        <strong>$100M+</strong>
+                        Project Value
+                    </div>
+                    <div class="credential">
+                        <strong>500+</strong>
+                        Brands Served
+                    </div>
+                    <div class="credential">
+                        <strong>24h</strong>
+                        Delivery
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- === SERVICES === -->
+    <section class="services" id="services">
+        <div class="section-header">
+            <h2 class="section-title">Capabilities</h2>
+            <span class="section-count">06 Services</span>
+        </div>
+        
+        <div class="services-grid">
+            <a href="#contact" class="service-item">
+                <div class="service-number">01</div>
+                <div>
+                    <h3 class="service-name">Voiceovers</h3>
+                    <p class="service-desc">Narrative-grade voice synthesis in 100+ languages with genuine emotion and nuance.</p>
+                </div>
+                <div>
+                    <span class="service-price">From $250</span>
+                    <span class="service-arrow">→</span>
+                </div>
+            </a>
+            
+            <a href="#contact" class="service-item">
+                <div class="service-number">02</div>
+                <div>
+                    <h3 class="service-name">Image Studios</h3>
+                    <p class="service-desc">Bespoke visual generation. Not stock. Art direction at scale.</p>
+                </div>
+                <div>
+                    <span class="service-price">From $150</span>
+                    <span class="service-arrow">→</span>
+                </div>
+            </a>
+            
+            <a href="#contact" class="service-item">
+                <div class="service-number">03</div>
+                <div>
+                    <h3 class="service-name">Music & Sound</h3>
+                    <p class="service-desc">Original compositions. Score-quality production. Any genre, any mood.</p>
+                </div>
+                <div>
+                    <span class="service-price">From $350</span>
+                    <span class="service-arrow">→</span>
+                </div>
+            </a>
+            
+            <a href="#contact" class="service-item">
+                <div class="service-number">04</div>
+                <div>
+                    <h3 class="service-name">Motion</h3>
+                    <p class="service-desc">Cinema-grade video generation. From concept to completion.</p>
+                </div>
+                <div>
+                    <span class="service-price">From $750</span>
+                    <span class="service-arrow">→</span>
+                </div>
+            </a>
+            
+            <a href="#contact" class="service-item">
+                <div class="service-number">05</div>
+                <div>
+                    <h3 class="service-name">Digital</h3>
+                    <p class="service-desc">Web experiences that don't look like templates. Award-winning design.</p>
+                </div>
+                <div>
+                    <span class="service-price">From $2,500</span>
+                    <span class="service-arrow">→</span>
+                </div>
+            </a>
+            
+            <a href="#contact" class="service-item">
+                <div class="service-number">06</div>
+                <div>
+                    <h3 class="service-name">Editorial</h3>
+                    <p class="service-desc">Copy that doesn't sound like it was written by a robot. Strategic writing.</p>
+                </div>
+                <div>
+                    <span class="service-price">From $200</span>
+                    <span class="service-arrow">→</span>
+                </div>
+            </a>
+        </div>
+    </section>
+    
+    <!-- === WORK === -->
+    <section class="work" id="work">
+        <div class="section-header">
+            <h2 class="section-title">Selected Work</h2>
+            <span class="section-count">Latest Projects</span>
+        </div>
+        
+        <div class="work-grid">
+            <div class="work-item">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80" alt="Project">
+                <div class="work-item-overlay">
+                    <div class="work-item-label">Brand Campaign</div>
+                    <h3 class="work-item-title">Hermès — Spring 2026</h3>
+                </div>
+            </div>
+            
+            <div class="work-item">
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="Project">
+                <div class="work-item-overlay">
+                    <div class="work-item-label">Music Video</div>
+                    <h3 class="work-item-title">Sony Music — Global Campaign</h3>
+                </div>
+            </div>
+            
+            <div class="work-item">
+                <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=800&q=80" alt="Project">
+                <div class="work-item-overlay">
+                    <div class="work-item-label">Digital Experience</div>
+                    <h3 class="work-item-title">Louis Vuitton — Runway Live</h3>
+                </div>
+            </div>
+            
+            <div class="work-item">
+                <img src="https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=800&q=80" alt="Project">
+                <div class="work-item-overlay">
+                    <div class="work-item-label">Voice Campaign</div>
+                    <h3 class="work-item-title">Apple — Siri Evolution</h3>
+                </div>
+            </div>
+        </div>
+        
+        <div class="work-cta">
+            <a href="#contact">View All Work</a>
+        </div>
+    </section>
+    
+    <!-- === QUOTE === -->
+    <section class="quote-section">
+        <p class="quote-text">
+            "<em>The best creatives don't use AI. They use intelligence to create— then use AI to execute.</em>"
+        </p>
+        <p class="quote-author">— Founding Principle, Zelox Group</p>
+    </section>
+    
+    <!-- === STATS === -->
+    <section class="stats">
+        <div class="stat-item">
+            <div class="stat-value">$100M+</div>
+            <div class="stat-label">Project Value Delivered</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">500+</div>
+            <div class="stat-label">Brands Served</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">50+</div>
+            <div class="stat-label">Specializations</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">Satisfaction Guaranteed</div>
+        </div>
+    </section>
+    
+    <!-- === CONTACT === -->
+    <section class="contact" id="contact">
+        <h2 class="contact-title">Let's Create</h2>
+        <p class="contact-subtitle">Tell us what you need. We'll make it happen.</p>
+        
+        <form class="contact-form" id="project-form">
+            <div class="form-row">
+                <div class="form-group full">
+                    <label>What do you need?</label>
+                    <textarea id="project-brief" name="brief" placeholder="Describe your project, brand, or vision..."></textarea>
+                </div>
+            </div>
+            
+            <div class="form-row three-col">
+                <div class="form-group">
+                    <label>Or record a voice note</label>
+                    <div class="voice-input" id="voice-input">
+                        <button class="voice-btn" id="voice-btn" type="button">
+                            <span class="voice-icon">🎤</span>
+                        </button>
+                        <span class="voice-status" id="voice-status">Tap to record</span>
+                        <audio id="voice-playback" controls></audio>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Add reference URLs</label>
+                    <div class="url-inputs">
+                        <input type="url" class="url-input" name="urls" placeholder="https://inspiration.com">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Your email</label>
+                    <input type="email" id="email" name="email" placeholder="hello@company.com" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Share inspiration images</label>
+                    <div class="file-drop" id="file-drop">
+                        <input type="file" id="file-input" name="images" accept="image/*" multiple hidden>
+                        <div class="file-drop-content">
+                            <span class="file-icon">📎</span>
+                            <span>Drop images or browse</span>
+                        </div>
+                    </div>
+                    <div class="file-list" id="file-list"></div>
+                </div>
+            </div>
+            
+            <button class="form-submit" type="submit">Send Brief →</button>
+        </form>
+        
+        <div class="or-divider">
+            <span>or</span>
+        </div>
+        
+        <div class="contact-email">
+            <a href="mailto:hello@zelox.com">hello@zelox.com</a>
+        </div>
+        
+        <div class="contact-locations">
+            <div class="contact-location">New York</div>
+            <div class="contact-location">London</div>
+            <div class="contact-location">Tokyo</div>
+            <div class="contact-location">Dubai</div>
+        </div>
+    </section>
+    
+    <!-- === FOOTER === -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="#" class="logo">ZELOX</a>
+                <p>A new standard in strategic creative. Not AI— artistry. Not generated— curated. The choice for brands that refuse to compromise.</p>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Services</h4>
+                <a href="#services">Voiceovers</a>
+                <a href="#services">Image Studios</a>
+                <a href="#services">Music</a>
+                <a href="#services">Motion</a>
+                <a href="#services">Digital</a>
+                <a href="#services">Editorial</a>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Studio</h4>
+                <a href="#about">About</a>
+                <a href="#work">Work</a>
+                <a href="#contact">Contact</a>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <a href="#">Instagram</a>
+                <a href="#">LinkedIn</a>
+                <a href="#">Twitter</a>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <span>© 2026 Zelox Group. All rights reserved.</span>
+            <span>New York • London • Tokyo • Dubai</span>
+        </div>
+    </footer>
+    
+    <script>
+        // Nav scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        // Voice Recording
+        const voiceBtn = document.getElementById('voice-btn');
+        const voiceStatus = document.getElementById('voice-status');
+        const voicePlayback = document.getElementById('voice-playback');
+        const voiceInput = document.getElementById('voice-input');
+        let mediaRecorder;
+        let audioChunks = [];
+        
+        if (voiceBtn) {
+            voiceBtn.addEventListener('click', async () => {
+                if (voiceBtn.classList.contains('recording')) {
+                    // Stop recording
+                    mediaRecorder.stop();
+                    voiceBtn.classList.remove('recording');
+                    voiceStatus.textContent = 'Tap to record';
+                } else {
+                    // Start recording
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        mediaRecorder = new MediaRecorder(stream);
+                        audioChunks = [];
+                        
+                        mediaRecorder.ondataavailable = (e) => {
+                            audioChunks.push(e.data);
+                        };
+                        
+                        mediaRecorder.onstop = () => {
+                            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                            const audioUrl = URL.createObjectURL(audioBlob);
+                            voicePlayback.src = audioUrl;
+                            voiceInput.classList.add('recording');
+                        };
+                        
+                        mediaRecorder.start();
+                        voiceBtn.classList.add('recording');
+                        voiceStatus.textContent = 'Recording... Tap to stop';
+                    } catch (err) {
+                        console.log('Microphone access needed');
+                        voiceStatus.textContent = 'Allow mic access';
+                    }
+                }
+            });
+        }
+        
+        // File Upload / Drag & Drop
+        const fileDrop = document.getElementById('file-drop');
+        const fileInput = document.getElementById('file-input');
+        const fileList = document.getElementById('file-list');
+        
+        if (fileDrop && fileInput) {
+            fileDrop.addEventListener('click', () => fileInput.click());
+            
+            fileInput.addEventListener('change', handleFiles);
+            
+            fileDrop.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileDrop.style.borderColor = 'var(--red)';
+            });
+            
+            fileDrop.addEventListener('dragleave', () => {
+                fileDrop.style.borderColor = 'rgba(255,255,255,0.2)';
+            });
+            
+            fileDrop.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileDrop.style.borderColor = 'rgba(255,255,255,0.2)';
+                fileInput.files = e.dataTransfer.files;
+                handleFiles();
+            });
+        }
+        
+        function handleFiles() {
+            if (!fileInput.files.length) return;
+            
+            Array.from(fileInput.files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'file-preview';
+                        fileList.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        // Form Submit - Opens email with all data
+        const form = document.getElementById('project-form');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const submitBtn = document.querySelector('.form-submit');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Preparing...';
+                
+                const brief = document.getElementById('project-brief')?.value || '';
+                const email = document.getElementById('email')?.value || '';
+                
+                if (!brief && !email) {
+                    submitBtn.textContent = originalText;
+                    alert('Please describe your project or enter your email.');
+                    return;
+                }
+                
+                // Build email body
+                let body = `From: ${email}\n`;
+                body += `Date: ${new Date().toLocaleString()}\n\n`;
+                body += `=== PROJECT BRIEF ===\n\n${brief}\n`;
+                
+                // Add reference links
+                const urlInputs = document.querySelectorAll('.url-input');
+                if (urlInputs.length > 0) {
+                    body += `\n=== REFERENCE LINKS ===\n`;
+                    urlInputs.forEach(input => {
+                        if (input.value) body += `- ${input.value}\n`;
+                    });
+                }
+                
+                // Add image count
+                const files = document.getElementById('file-input')?.files;
+                if (files?.length) {
+                    body += `\n=== ATTACHED FILES ===\n`;
+                    body += `${files.length} file(s) attached - will be sent with email\n`;
+                }
+                
+                // Get voice note info
+                const voicePlayback = document.getElementById('voice-playback');
+                if (voicePlayback?.src && voicePlayback.src !== window.location.href) {
+                    body += `\n=== VOICE NOTE ===\nRecorded voice note attached\n`;
+                }
+                
+                submitBtn.textContent = 'Opening Email...';
+                
+                const subject = encodeURIComponent(`New Project Brief - ${email || 'Website'}`);
+                const bodyEnc = encodeURIComponent(body);
+                
+                // Open email client with mailto
+                window.location.href = `mailto:hello@zelox.com?subject=${subject}&body=${bodyEnc}`;
+                
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                }, 2000);
+            });
+        }
+        
+        // Parallax on cover image
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const cover = document.querySelector('.cover-image');
+            if (cover && scrolled < window.innerHeight) {
+                cover.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+        });
+    </script>
+<style>
+#minimax-floating-ball {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 12px;
+  background: #222222;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  color: #F8F8F8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  z-index: 9999;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+#minimax-floating-ball:hover {
+  transform: translateY(-2px);
+  background: #383838;
+}
+.minimax-ball-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.minimax-logo-wave {
+  width: 20px;
+  height: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg%20preserveAspectRatio%3D%27none%27%20width%3D%27100%25%27%20height%3D%27100%25%27%20overflow%3D%27visible%27%20style%3D%27display%3A%20block%3B%27%20viewBox%3D%270%200%20170.136%20138.225%27%20fill%3D%27none%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cg%20id%3D%27Frame%202116748449%27%3E%3Cpath%20id%3D%27Subtract%27%20d%3D%27M170%20101.783C170%20105.144%20168.49%20108.327%20165.886%20110.453L134.963%20135.702C132.964%20137.334%20130.463%20138.225%20127.883%20138.225H10.4938C4.69824%20138.225%200%20133.527%200%20127.732V39.2289C0%2035.8597%201.51758%2032.6698%204.13162%2030.5442L38.5402%202.56547C40.536%200.942662%2043.0298%200.0567377%2045.602%200.0567377H159.506C165.302%200.0567377%20170%204.75498%20170%2010.5506V101.783Z%27%20fill%3D%27black%27%20style%3D%27fill%3Ablack%3Bfill-opacity%3A1%3B%27/%3E%3Cpath%20id%3D%27Subtract_2%27%20d%3D%27M149.011%2094.4632C149.011%2096.1471%20148.253%2097.7415%20146.946%2098.8043L125.893%20115.936C124.895%20116.748%20123.648%20117.191%20122.361%20117.191H24.6479C22.716%20117.191%2021.15%20115.625%2021.15%20113.693V46.1166C21.15%2044.4267%2021.9135%2042.8274%2023.2274%2041.7648L47.367%2022.2437C48.3638%2021.4376%2049.607%2020.9982%2050.8888%2020.9988L145.514%2021.0427C147.446%2021.0436%20149.011%2022.6094%20149.011%2024.5406V94.4632Z%27%20fill%3D%27white%27%20style%3D%27fill%3Awhite%3Bfill-opacity%3A1%3B%27/%3E%3Cpath%20id%3D%27Rectangle%20111142564%27%20d%3D%27M42.111%2080.8025C42.111%2077.7115%2044.6167%2075.2057%2047.7077%2075.2057H60.9999C64.0908%2075.2057%2066.5966%2077.7115%2066.5966%2080.8025V121.029H42.111V80.8025Z%27%20fill%3D%27black%27%20style%3D%27fill%3Ablack%3Bfill-opacity%3A1%3B%27/%3E%3Cpath%20id%3D%27Rectangle%20111142567%27%20d%3D%27M79.1894%2080.8025C79.1894%2077.7115%2081.6952%2075.2057%2084.7861%2075.2057H98.0783C101.169%2075.2057%20103.675%2077.7115%20103.675%2080.8025V121.029H79.1894V80.8025Z%27%20fill%3D%27black%27%20style%3D%27fill%3Ablack%3Bfill-opacity%3A1%3B%27/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 14px 11px;
+  background-color: #8FD1FF;
+  border-radius: 4px;
+}
+
+.minimax-ball-text {
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.minimax-close-icon {
+  margin-left: 8px;
+  font-size: 16px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.minimax-close-icon:hover {
+  opacity: 1;
+}
+</style>
+<div id="minimax-floating-ball">
+  <div class="minimax-ball-content">
+    <div class="minimax-logo-wave"></div>
+    <span class="minimax-ball-text">Created by MiniMax Agent</span>
+  </div>
+  <div class="minimax-close-icon">×</div>
+</div>
+<script>
+// Initialize floating ball functionality
+function initFloatingBall() {
+  const ball = document.getElementById('minimax-floating-ball');
+  if (!ball) return;
+
+  // Initial animation
+  ball.style.opacity = '0';
+  ball.style.transform = 'translateY(20px)';
+
+  setTimeout(() => {
+    ball.style.opacity = '1';
+    ball.style.transform = 'translateY(0)';
+  }, 500);
+
+  // Handle logo click
+  const ballContent = ball.querySelector('.minimax-ball-content');
+  ballContent.addEventListener('click', function (e) {
+    e.stopPropagation();
+    window.open('https://agent.minimax.io/', '_blank');
+    ball.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      ball.style.transform = 'scale(1)';
+    }, 100);
+  });
+
+  // Handle close button click
+  const closeIcon = ball.querySelector('.minimax-close-icon');
+  closeIcon.addEventListener('click', function (e) {
+    e.stopPropagation();
+    ball.style.opacity = '0';
+    ball.style.transform = 'translateY(20px)';
+
+    setTimeout(() => {
+      ball.style.display = 'none';
+    }, 300);
+  });
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', initFloatingBall); 
+</script>
+</body>
+</html>
